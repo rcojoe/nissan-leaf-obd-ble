@@ -86,15 +86,15 @@ def load_overrides(
 
         if not entry.get("enabled", True):
             disabled_commands.add(key)
-            continue
+            #continue
+        else:
 
-        try:
-            cmd = _build_command(key, entry, python_module)
-        except Exception as err:
-            _LOGGER.error("Invalid override for command '%s': %s", key, err)
-            continue
-
-        extra_commands[key] = cmd
+            try:
+                cmd = _build_command(key, entry, python_module)
+            except Exception as err:
+                _LOGGER.error("Invalid override for command '%s': %s", key, err)
+                continue
+            extra_commands[key] = cmd
 
         if "sensor" in entry and key not in leaf_commands:
             try:
