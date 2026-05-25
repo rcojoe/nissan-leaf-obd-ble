@@ -1,0 +1,299 @@
+# config/custom_components/nissan_leaf_obd_ble/overrides.yaml
+
+_all_:                          # applies to every Leaf instance
+  commands:
+    unknown:
+      command: "03221E33"
+      header: "7E5"
+      bytes: 7
+      decoder:
+        type: linear_scale
+        byte_offset: 3
+        scale: 1
+    state_of_charge:
+      command: "0322028C"
+      header: "7E5"
+      bytes: 4
+      decoder:
+        type: linear_scale
+        byte_offset: 3
+        scale: 1   
+        
+        
+    hv_battery_Ah:
+      command: "03227400"
+      header: "7E5"
+      bytes: 5
+      decoder:
+        type: multi_byte_int
+        byte_start: 4
+        byte_end: 5
+        scale: .2  
+
+    hv_Low_cell_volts:
+      command: "03221e34"
+      header: "7E5"
+      bytes: 7
+      decoder:
+        type: multi_byte_int
+        byte_start: 3
+        byte_end: 5
+        scale: .001
+      sensor:                   # HA entity metadata (required for new commands)
+        name: "HV Lowest Cell Volts"
+        state_class: SensorStateClass.MEASUREMENT
+        icon: "mdi:car-battery"
+        unit: "V"
+        precision: 3
+        device_class: voltage
+
+    hv_low_cell_index:
+      command: "03221e34"
+      header: "7E5"
+      bytes: 7
+      decoder:
+        type: linear_scale
+        byte_offset: 6
+        scale: 1  
+      sensor:                   # HA entity metadata (required for new commands)
+        name: "HV Lowest Cell V Index"
+        state_class: SensorStateClass.MEASUREMENT
+        icon: "mdi:ev-plug-chademo"
+        precision: 1
+        unit: "Idx"
+
+
+    hv_high_cell_index:
+      command: "03221e33"
+      header: "7E5"
+      bytes: 7
+      decoder:
+        type: linear_scale
+        byte_offset: 6
+        scale: 1  
+      sensor:                   # HA entity metadata (required for new commands)
+        name: "HV Highest Cell V Index"
+        state_class: SensorStateClass.MEASUREMENT
+        icon: "mdi:ev-plug-chademo"
+        precision: 1
+        unit: "Idx"
+        
+        
+    hv_high_cell_volts:
+      command: "03221e33"
+      header: "7E5"
+      bytes: 7
+      decoder:
+        type: multi_byte_int
+        byte_start: 3
+        byte_end: 5
+        scale: .001  
+      sensor:                   # HA entity metadata (required for new commands)
+        name: "HV Highest Cell Volts"
+        state_class: SensorStateClass.MEASUREMENT
+        icon: "mdi:car-battery"
+        unit: "V"
+        precision: 3
+        device_class: voltage
+
+    hv_battery_voltage:
+      command: "03221e3B"
+      header: "7E5"
+      bytes: 5
+      decoder:
+        type: multi_byte_int
+        byte_start: 3
+        byte_end: 5
+        scale: .1  
+
+    hv_battery_current_1:
+      command: "03221e3D"
+      header: "7E5"
+      bytes: 6
+#      decoder:
+#        type: multi_byte_int
+#        byte_start: 4
+#        byte_end: 7
+#        offset: -150000
+#        scale: .01   
+      decoder:
+        type: python
+        function: my_hv_current_decoder        
+        
+
+    my_hv_high_mod_temp:
+      command: "03221e0e"
+      header: "7E5"
+      bytes: 5
+      decoder:
+        type: python
+        function: my_hv_high_mod_decoder
+      sensor:
+        name: "HV Highest Mod Temp"
+        state_class: SensorStateClass.MEASUREMENT
+        icon: "mdi:thermometer"
+        unit: "°C"
+        precision: 1
+        device_class: temperature
+
+    my_hv_high_mod_sensor:
+      command: "03221e0e"
+      header: "7E5"
+      bytes: 5
+      decoder:
+        type: python
+        function: my_hv_high_mod_decoder
+      sensor:              
+        name: "HV Highest Mod Index"
+        state_class: SensorStateClass.MEASUREMENT
+        icon: "mdi:ev-plug-chademo"
+        precision: 1
+        unit: "Idx"
+
+    my_hv_low_mod_temp_and_index:
+      command: "03221e0f"
+      header: "7E5"
+      bytes: 5
+      decoder:
+        type: python
+        function: my_hv_low_mod_decoder    
+
+    my_hv_low_mod_sensor:
+      enabled: false
+      sensor:              
+        name: "HV Lowest Mod Index"
+        state_class: SensorStateClass.MEASUREMENT
+        icon: "mdi:ev-plug-chademo"
+        precision: 1
+        unit: "Idx"
+
+    my_hv_low_mod_temp:
+      enabled: false
+      sensor:
+        name: "HV Lowest Mod Temp"
+        state_class: SensorStateClass.MEASUREMENT
+        icon: "mdi:thermometer"
+        unit: "°C"
+        precision: 1
+        device_class: temperature
+
+#    hv_1_mod_temp:
+#      command: "03221eae"
+#      header: "7E5"
+#      bytes: 4
+#      decoder:
+#        type: multi_byte_int
+#        byte_start: 3
+#        byte_end: 4
+#        scale: .5
+#        offset: -40
+
+    hv_total_throughputs:
+      command: "03221e32"
+      header: "7E5"
+      bytes: 19
+      decoder:
+        type: python
+        function: my_hv_total_kwh 
+      
+    my_hv_charge_kwh:
+      enabled: false
+      sensor:                   # HA entity metadata (required for new commands)
+        name: "HV KW Charging"
+        state_class: SensorStateClass.MEASUREMENT
+        icon: "mdi:ev-plug-chademo"
+        precision: 1
+        unit: "kWh"
+        device_class: energy
+
+    my_hv_discharge_kwh:
+      enabled: false
+      sensor:                   # HA entity metadata (required for new commands)
+        name: "HV KW Discharge"
+        state_class: SensorStateClass.MEASUREMENT
+        icon: "mdi:ev-plug-chademo"
+        precision: 1
+        unit: "kWh"
+        device_class: energy
+
+    hv_balancing_minutes_all:
+      command: "03222002"
+      header: "7E5"
+      bytes: 419
+      decoder:
+        type: python
+        function: hv_balancing_minutes_all 
+
+
+    sum_bal:
+      enabled: false
+      sensor:                   # HA entity metadata (required for new commands)
+        name: "HV Sum of Balancing"
+        state_class: total_increasing
+        device_class: duration
+        icon: "mdi:ev-plug-chademo"
+        precision: 1
+        unit: "min"
+        
+
+
+
+
+
+    power_switch:
+      enabled: false
+    gear_position:
+      enabled: false
+    bat_12v_voltage:
+      enabled: false
+    bat_12v_current:
+      enabled: false
+    quick_charges:
+      enabled: false
+    l1_l2_charges:
+      enabled: false
+    ambient_temp:
+      enabled: false
+    estimated_ac_power:
+      enabled: false
+    estimated_ptc_power:
+      enabled: false
+    aux_power:
+      enabled: false
+    ac_power:
+      enabled: false
+    plug_state:
+      enabled: false
+    charge_mode:
+      enabled: false
+    rpm:
+      enabled: false
+    obc_out_power:
+      enabled: false
+    motor_power:
+      enabled: false
+    speed:
+      enabled: false
+    ac_on:
+      enabled: false
+    rear_heater:
+      enabled: false
+    eco_mode:
+      enabled: false
+    e_pedal_mode:
+      enabled: false
+    odometer:
+      enabled: false
+    tp_fr:
+      enabled: false
+    tp_fl:
+      enabled: false
+    tp_rr:
+      enabled: false
+    tp_rl:
+      enabled: false
+    range_remaining:
+      enabled: false
+    lbc:
+      enabled: false
+
