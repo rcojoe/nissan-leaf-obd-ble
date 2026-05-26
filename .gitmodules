@@ -1,0 +1,3 @@
+[submodule "nissan_leaf_obd_ble"]
+	path = nissan_leaf_obd_ble
+	url = https://github.com/rcojoe/py-nissan-leaf-obd-ble.git
