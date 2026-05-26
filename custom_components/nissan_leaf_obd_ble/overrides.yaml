@@ -235,10 +235,45 @@ _all_:                          # applies to every Leaf instance
         precision: 1
         unit: "min"
         
+    ambient_temp:
+      command: "03227441"
+      header: "7E5"
+      bytes: 4
+      decoder:
+        type: linear_scale
+        byte_offset: 2
+        offset: -40  
+    
+    charger_soc:
+      command: "03221DD0"
+      header: "7A6"
+      bytes: 3
+      decoder:
+        type: linear_scale
+        byte_offset: 2
+        scale: 1   
 
 
 
+    charger_time_total:
+      command: "032215EE"
+      header: "744"
+      bytes: 6
+      decoder:
+        type: multi_byte_int
+        byte_start: 4
+        byte_end: 6
+        scale: 1  
 
+    charger_power_total:
+      command: "032215EF"
+      header: "7A6"
+      bytes: 3
+      decoder:
+        type: multi_byte_int
+        byte_start: 2
+        byte_end: 3
+        scale: 1  
 
     power_switch:
       enabled: false
@@ -251,8 +286,6 @@ _all_:                          # applies to every Leaf instance
     quick_charges:
       enabled: false
     l1_l2_charges:
-      enabled: false
-    ambient_temp:
       enabled: false
     estimated_ac_power:
       enabled: false
