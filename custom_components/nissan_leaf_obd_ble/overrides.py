@@ -3,6 +3,7 @@
 import importlib.util
 import logging
 import struct
+import sys
 from pathlib import Path
 from typing import Any, Callable
 
@@ -13,6 +14,11 @@ from homeassistant.components.sensor import (
     SensorStateClass,
 )
 from homeassistant.core import HomeAssistant
+
+# Add submodule to path for local import
+_SUBMODULE_PATH = Path(__file__).parent.parent.parent / "nissan_leaf_obd_ble"
+if str(_SUBMODULE_PATH) not in sys.path:
+    sys.path.insert(0, str(_SUBMODULE_PATH))
 
 from py_nissan_leaf_obd_ble.OBDCommand import OBDCommand
 from py_nissan_leaf_obd_ble.commands import leaf_commands
