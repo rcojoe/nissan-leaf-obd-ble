@@ -291,6 +291,7 @@ Bug reports and feature requests can be filed as [GitHub Issues](https://github.
 - [My Nissan Leaf Forum — BLE / LeLink2 libraries](https://mynissanleaf.com/threads/ble-lelink2-leaf-open-source-libraries.34904/)
 - [Official Home Assistant Nissan Leaf integration](https://www.home-assistant.io/integrations/nissan_leaf/) (cloud-based, older models only)
 - [ESPHome Bluetooth Proxy](https://esphome.io/components/bluetooth_proxy.html)
+- 
 
 ---
 
