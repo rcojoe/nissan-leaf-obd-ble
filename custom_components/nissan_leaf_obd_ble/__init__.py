@@ -5,6 +5,8 @@ https://github.com/pbutterworth/nissan-leaf-obd-ble
 """
 
 import logging
+import sys
+from pathlib import Path
 
 from bleak_retry_connector import get_device
 
@@ -14,6 +16,11 @@ from homeassistant.const import CONF_ADDRESS
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers.typing import ConfigType
+
+# Add submodule to path for local import
+_SUBMODULE_PATH = Path(__file__).parent.parent.parent / "nissan_leaf_obd_ble"
+if str(_SUBMODULE_PATH) not in sys.path:
+    sys.path.insert(0, str(_SUBMODULE_PATH))
 
 from py_nissan_leaf_obd_ble import NissanLeafObdBleApiClient
 from .const import DOMAIN, PLATFORMS, STARTUP_MESSAGE
