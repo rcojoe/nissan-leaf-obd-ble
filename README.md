@@ -1,3 +1,5 @@
+# This is very much still the Nissan Leaf labeled integration.   I have not yet changed the refrences to represent the Porsche solution. 
+
 # Nissan Leaf OBD BLE — Home Assistant Custom Integration
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)
@@ -5,7 +7,7 @@
 [![License](https://img.shields.io/github/license/pbutterworth/nissan-leaf-obd-ble.svg)](LICENSE)
 [![GitHub Issues](https://img.shields.io/github/issues/pbutterworth/nissan-leaf-obd-ble.svg)](https://github.com/pbutterworth/nissan-leaf-obd-ble/issues)
 
-A [Home Assistant](https://www.home-assistant.io/) custom integration for monitoring **Nissan Leaf** battery data via a Bluetooth Low Energy (BLE) ELM327 OBD-II adapter (such as the [LeLink2](https://www.lelink.net/)).
+A [Home Assistant](https://www.home-assistant.io/) custom integration for monitoring **Porsche E Hybrid** battery data via a Bluetooth Low Energy (BLE) ELM327 OBD-II adapter.
 
 When your Leaf pulls into the garage, this integration automatically connects over BLE and reads live battery diagnostics — state of charge, state of health, and more — making them available as native Home Assistant sensors for dashboards, automations, and history tracking.
 
@@ -16,7 +18,7 @@ When your Leaf pulls into the garage, this integration automatically connects ov
 ## Features
 
 - **State of Charge (SoC)** — real-time battery percentage
-- **State of Health (SoH)** — long-term battery degradation tracking
+- Grab Data to help determine State of Health (SoH) — long-term battery degradation tracking
 - **Battery capacity** — available and total capacity in kWh
 - Communicates over **Bluetooth Low Energy** — no Wi-Fi or cloud dependency
 - Works with an **ESPHome Bluetooth proxy** (e.g. GL-iNet GL-S10), so your HA host doesn't need to be near the car
@@ -30,7 +32,7 @@ When your Leaf pulls into the garage, this integration automatically connects ov
 
 | Item | Details |
 |---|---|
-| **LeLink2 ELM327 BLE OBD-II adapter** | Plugs into the Nissan Leaf's OBD-II port. Other ELM327 BLE dongles may also work. |
+| **ELM327 BLE OBD-II adapter** | Plugs into the Porsche E Hybrid's OBD-II port. Other ELM327 BLE dongles may also work. |
 | **Bluetooth radio** | Either the HA host's built-in Bluetooth, or an [ESPHome Bluetooth proxy](https://esphome.io/components/bluetooth_proxy.html) (recommended for garage setups). |
 
 > **Recommended setup:** A GL-iNet **GL-S10** flashed with ESPHome as a Bluetooth proxy placed in/near the garage. This lets your HA host (wherever it lives) receive BLE advertisements from the LeLink2 dongle without needing to be physically close.
@@ -51,21 +53,21 @@ When your Leaf pulls into the garage, this integration automatically connects ov
 3. Select **Custom repositories**.
 4. Paste the repository URL:
    ```
-   https://github.com/pbutterworth/nissan-leaf-obd-ble
+   https://github.com/rcojoe/nissan-leaf-obd-ble
    ```
    and set the category to **Integration**. Click **Add**.
-5. Find **Nissan Leaf OBD BLE** in the HACS integration list and click **Download**.
+5. Find **Porsche E Hybrid OBD BLE** in the HACS integration list and click **Download**.
 6. Restart Home Assistant.
-7. Go to **Settings → Devices & Services → Add Integration**, search for **Nissan Leaf OBD BLE**, and follow the setup wizard.
+7. Go to **Settings → Devices & Services → Add Integration**, search for **Porsche E Hybrid OBD BLE**, and follow the setup wizard.
 
 ### Option 2 — Manual
 
-1. Download the [latest release](https://github.com/pbutterworth/nissan-leaf-obd-ble/releases/latest) or clone this repository.
+1. Download the [latest release](https://github.com/rcojoe/nissan-leaf-obd-ble/releases/latest) or clone this repository.
 2. Copy the `custom_components/nissan_leaf_obd_ble` folder into your Home Assistant `config/custom_components/` directory:
    ```
    config/
    └── custom_components/
-       └── nissan_leaf_obd_ble/
+       └── porsche_ehybrid_obd_ble/
            ├── __init__.py
            ├── manifest.json
            ├── config_flow.py
@@ -73,7 +75,7 @@ When your Leaf pulls into the garage, this integration automatically connects ov
            └── ...
    ```
 3. Restart Home Assistant.
-4. Go to **Settings → Devices & Services → Add Integration**, search for **Nissan Leaf OBD BLE**, and follow the setup wizard.
+4. Go to **Settings → Devices & Services → Add Integration**, search for **Porsche E Hybrid OBD BLE**, and follow the setup wizard.
 
 ---
 
@@ -94,7 +96,7 @@ After setup, open the device and click **Configure** to adjust **polling interva
 
 **Using a dongle with different GATT UUIDs**
 
-- You can still add the integration manually: **Settings → Devices & Services → Add Integration** → **Nissan Leaf OBD BLE**, then pick your device from the list (devices are filtered by local name “OBDBLE”). After adding, open the device, click **Configure**, and set the three BLE UUIDs (service, read characteristic, write characteristic) to match your dongle so the connection works.
+- You can still add the integration manually: **Settings → Devices & Services → Add Integration** → **Porsche E Hybrid OBD BLE**, then pick your device from the list (devices are filtered by local name “OBDBLE”). After adding, open the device, click **Configure**, and set the three BLE UUIDs (service, read characteristic, write characteristic) to match your dongle so the connection works.
 
 **Making automatic discovery work for another dongle**
 
@@ -116,7 +118,7 @@ After setup, open the device and click **Configure** to adjust **polling interva
 
 ## Entities
 
-Once set up, the integration creates a **device** for your Nissan Leaf and exposes the following **sensor entities**:
+Once set up, the integration creates a **device** for your Porsche E Hybrid and exposes the following **sensor entities**:
 
 | Entity | Unit | Description |
 |---|---|---|
@@ -133,11 +135,11 @@ Once set up, the integration creates a **device** for your Nissan Leaf and expos
 The LeLink2 dongle tunnels the ELM327 serial protocol over BLE GATT. This integration includes a custom `bleserial` module that wraps Home Assistant's bundled [`bleak`](https://github.com/hbldh/bleak) client to expose a `pySerial`-like interface. On top of that, a modified [`python-OBD`](https://github.com/brendan-w/python-OBD) layer handles ELM327 command formatting, ISO 15765-4 CAN framing, and flow control — producing decoded Leaf-specific PID responses that are then published as HA sensor states.
 
 ```
-Nissan Leaf CAN bus
+Porsche E Hybrid CAN bus
         │
   OBD-II port
         │
-  LeLink2 dongle  ◄──── BLE ────►  ESPHome Bluetooth Proxy  ◄──── Wi-Fi ────►  Home Assistant
+  OBD dongle  ◄──── BLE ────►  ESPHome Bluetooth Proxy  ◄──── Wi-Fi ────►  Home Assistant
                                           (GL-S10)                               nissan_leaf_obd_ble
 ```
 
@@ -145,7 +147,7 @@ Nissan Leaf CAN bus
 
 ## Overriding OBD Commands and Decoders
 
-Different Nissan Leaf generations and trim levels use different OBD PIDs and message formats. Rather than waiting for a new package release, you can override any command directly in your Home Assistant config directory.
+Different Porsche E Hybrid generations and trim levels use different OBD PIDs and message formats. Rather than waiting for a new package release, you can override any command directly in your Home Assistant config directory.
 
 ### Quick start
 
@@ -153,7 +155,7 @@ Create the file `config/custom_components/nissan_leaf_obd_ble/overrides.yaml`. R
 
 ### overrides.yaml format
 
-Top-level keys are BLE device MAC addresses (upper-case). Use `_all_` to apply overrides to every Nissan Leaf config entry in your HA install.
+Top-level keys are BLE device MAC addresses (upper-case). Use `_all_` to apply overrides to every Porsche E Hybrid config entry in your HA install.
 
 ```yaml
 # config/custom_components/nissan_leaf_obd_ble/overrides.yaml
@@ -268,8 +270,8 @@ The module is loaded once when the integration starts. Any errors during loading
 ## Known Issues
 
 - The integration is under active development and may have rough edges.
-- Newer Nissan Leaf models (ZE1 / Gen 2 onwards) do not have background CAN traffic at the OBD port — the car must be on for data to be polled.
-- Only the LeLink2 BLE adapter has been tested; other ELM327 BLE adapters may work but are untested.
+- Porsche E Hybrids do not accept BMS and Charger PIDS at the OBD port unless the car is charging.
+- Only the Vlink BLE adapter has been tested; other ELM327 BLE adapters may work but are untested.
 
 ---
 
@@ -286,7 +288,7 @@ Bug reports and feature requests can be filed as [GitHub Issues](https://github.
 ---
 
 ## Related Resources
-
+- [A huge shout out to PbutterWorth for creating the original Nissan Leaf Integration that this is based](https://github.com/pbutterworth/nissan-leaf-obd-ble/)
 - [HA Community discussion thread](https://community.home-assistant.io/t/custom-component-nissan-leaf-via-lelink-2-elm327-ble/561961)
 - [My Nissan Leaf Forum — BLE / LeLink2 libraries](https://mynissanleaf.com/threads/ble-lelink2-leaf-open-source-libraries.34904/)
 - [Official Home Assistant Nissan Leaf integration](https://www.home-assistant.io/integrations/nissan_leaf/) (cloud-based, older models only)
